@@ -17,8 +17,8 @@ player_height=50
 player_speed=5
 projectiles=[]
 projectiles_speed=8
-projectiles_height=2
-projectiles_width=3
+projectiles_height=10
+projectiles_width=10
 
 
 #en boucle tant que cette condition est vraie (on créer la boucle du jeu qui met à jour les persos etc)
