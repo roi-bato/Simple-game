@@ -170,8 +170,7 @@ def game():
     white_color=(255,255,255)
     menu_state=1
     current_state=menu
-    if current_state=="gamez":
-        gamez=True
+    gamez=True
     while gamez:
 
         #appliquer l'arrière plan du jeu
@@ -240,7 +239,7 @@ def game():
         if is_collide_between_rect(player_x,player_y,player_width,player_height,enemies_x,enemies_y,enemies_width,enemies_height) :
             player_x=0
             player_y=0
-            main_menu()
+            gamez = False
         
 
 
@@ -302,7 +301,7 @@ def game():
                 running = False
                 pygame.quit()
                 print("fermeture du jeu")
-if gamez==True:
-    game()
-else:
+
+while(True):
     main_menu()
+    game()
