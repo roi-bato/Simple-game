@@ -1,77 +1,30 @@
 
 import pygame, math, random, sys
 pygame.init()
-
-
 #générer la fenêtre du jeu
 pygame.display.set_caption("Globbux vs Robotors")
 width=1080
 height=720
 screen = pygame.display.set_mode((width,height))
-Robolox = pygame.image.load("assets/Robotor.PNG")
-Robolox = pygame.transform.scale(Robolox,(35,35))
-background = pygame.image.load("assets/Capture.PNG")
-player_char = pygame.image.load('assets/Robotor.PNG')
-enemies = pygame.image.load("assets/Globbux.PNG")
-enemies = pygame.transform.scale(enemies,(50,50))
-running = True
-color = (255,0,0)
-player_x=30
-player_y=30
-player_width=35
-player_height=35
-player_speed=5
-projectiles=[]
-projectiles_speed=8
-projectiles_height=10
-projectiles_width=10
-score=0
-enemies_x=500
-enemies_y=500
-enemies_height=50
-enemies_width=50
-enemies_speed_x = 1
-enemies_speed_y = 1
-enemies_waypoint_x= random.randint(0,width)
-enemies_waypoint_y=random.randint(0,height)
-enemies_radians = math.atan2(enemies_waypoint_y-enemies_y, enemies_waypoint_x-enemies_x)
-mydegrees = math.degrees(enemies_radians)
-print(mydegrees)
-print(enemies_waypoint_x)
-print(enemies_waypoint_y)
-velocity_enemys_x = math.cos(enemies_radians) * enemies_speed_x
-velocity_enemys_y = math.sin(enemies_radians) * enemies_speed_y
-enemys=[]
-menu=1
-color_dark=(100,100,100)
-white_color=(255,255,255)
-menu_state=1
 
-
-white=(255, 255, 255)
-black=(0, 0, 0)
-gray=(50, 50, 50)
-red=(255, 0, 0)
-green=(0, 255, 0)
-blue=(0, 0, 255)
-yellow=(255, 255, 0)
-gamez=False
 # Game Fonts
-font = "assets/Font.ttf"
- 
+
 def text_format(message, textFont, textSize, textColor):
     newFont=pygame.font.Font(textFont, textSize)
     newText=newFont.render(message, 0, textColor)
  
     return newText
- 
-
-
 
 def main_menu():
-
-
-   
+    font = "assets/Font.ttf"
+    gamez=False
+    white=(255, 255, 255)
+    black=(0, 0, 0)
+    gray=(50, 50, 50)
+    red=(255, 0, 0)
+    green=(0, 255, 0)
+    blue=(0, 0, 255)
+    yellow=(255, 255, 0)
     selected="start"
     menu=True
     while menu:
@@ -136,12 +89,12 @@ def game():
     Robolox = pygame.image.load("assets/Robotor.PNG")
     Robolox = pygame.transform.scale(Robolox,(35,35))
     background = pygame.image.load("assets/Capture.PNG")
-    player_char = pygame.image.load('assets/Robotor.PNG')
+    red=(255, 0, 0)
     enemies = pygame.image.load("assets/Globbux.PNG")
     enemies = pygame.transform.scale(enemies,(50,50))
-    running = True
+    
     score=0
-    color = (255,0,0)
+    
     player_x=30
     player_y=30
     player_width=35
@@ -151,36 +104,32 @@ def game():
     projectiles_speed=8
     projectiles_height=10
     projectiles_width=10
-    enemies_height=50
-    enemies_width=50
-    enemies_speed_x = 1
-    enemies_speed_y = 1
-    enemies_radians = math.atan2(enemies_waypoint_y-enemies_y, enemies_waypoint_x-enemies_x)
-    mydegrees = math.degrees(enemies_radians)
-    print(mydegrees)
-    print(enemies_waypoint_x)
-    print(enemies_waypoint_y)
-    velocity_enemys_x = math.cos(enemies_radians) * enemies_speed_x
-    velocity_enemys_y = math.sin(enemies_radians) * enemies_speed_y
+    enemys_height=50
+    enemys_width=50
+    enemys_speed_x = 3
+    enemys_speed_y = 4
+    
+   
+   
+    
     enemys=[[600,600,100,100]]
-    z=1
+   
     clo_obj=pygame.time.Clock()
-    menu=1
-    color_dark=(100,100,100)
-    white_color=(255,255,255)
-    menu_state=1
-    current_state=menu
+    
+
+
+    
     gamez=True
     timev1=pygame.time.get_ticks()
     while gamez:
-        z+=1
+        
         #appliquer l'arrière plan du jeu
         screen.blit(background, (0,0))
         #D'abord mettre l'axe x puis y puis la largeur de l'objet et puis hauteur   
         screen.blit(Robolox, (player_x,player_y))
 
 
-        if(pygame.time.get_ticks() > timev1 + 1):
+        if(pygame.time.get_ticks() > timev1 + 1000):
             timev1 = pygame.time.get_ticks()
             if(random.randint(0, 100) >= 0):
 
@@ -200,10 +149,10 @@ def game():
 
             projectile_x = projectile[0]
             projectile_y = projectile[1]
-            pygame.draw.rect(screen, color, pygame.Rect(projectile_x, projectile_y, projectiles_width, projectiles_height)) 
+            pygame.draw.rect(screen, red, pygame.Rect(projectile_x, projectile_y, projectiles_width, projectiles_height)) 
             for (index_enemy, enemy) in enumerate(enemys):
                 (enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y) = enemy
-                collision=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,enemy_x,enemy_y,enemies_width,enemies_height)
+                collision=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,enemy_x,enemy_y,enemys_width,enemys_height)
                 if collision:
                     #enemys[index_enemy][0] = 9999999
                     #enemys[index_enemy][1] = 19999999
@@ -216,13 +165,13 @@ def game():
 
 
 
-#         if abs(enemies_x-enemies_waypoint_x)<50 and abs(enemies_y-enemies_waypoint_y)<50:
-#            enemies_waypoint_x= random.randint(0,width)
-#            enemies_waypoint_y=random.randint(0,height)
-#            enemies_radians = math.atan2(enemies_waypoint_y-enemies_y, enemies_waypoint_x-enemies_x)
-#            mydegrees = math.degrees(enemies_radians)
-#            velocity_enemys_x = math.cos(enemies_radians) * enemies_speed_x
-#            velocity_enemys_y = math.sin(enemies_radians) * enemies_speed_y
+#         if abs(enemys_x-enemys_waypoint_x)<50 and abs(enemys_y-enemys_waypoint_y)<50:
+#            enemys_waypoint_x= random.randint(0,width)
+#            enemys_waypoint_y=random.randint(0,height)
+#            enemys_radians = math.atan2(enemys_waypoint_y-enemys_y, enemys_waypoint_x-enemys_x)
+#            mydegrees = math.degrees(enemys_radians)
+#            velocity_enemys_x = math.cos(enemys_radians) * enemys_speed_x
+#            velocity_enemys_y = math.sin(enemys_radians) * enemys_speed_y
 
 
 
@@ -232,8 +181,8 @@ def game():
 
             enemy_radians = math.atan2(enemy_waypoint_y-enemy_y, enemy_waypoint_x-enemy_x)
             mydegrees = math.degrees(enemy_radians)
-            velocity_enemy_x = math.cos(enemy_radians) * enemies_speed_x
-            velocity_enemy_y = math.sin(enemy_radians) * enemies_speed_y
+            velocity_enemy_x = math.cos(enemy_radians) * enemys_speed_x
+            velocity_enemy_y = math.sin(enemy_radians) * enemys_speed_y
             enemy[0] = enemy[0]+velocity_enemy_x
             enemy[1] = enemy[1]+velocity_enemy_y
             screen.blit(enemies, (enemy_x,enemy_y))
@@ -247,25 +196,25 @@ def game():
                 enemys[index_enemys] =  [enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y]
 
  
-            '''collision=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,enemies_x,enemies_y,enemies_width,enemies_height)
+            '''collision=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,enemys_x,enemys_y,enemys_width,enemys_height)
             
-            if abs(enemies_x-enemies_waypoint_x)<50 and abs(enemies_y-enemies_waypoint_y)<50:
-                enemies_waypoint_x= random.randint(0,width)
-                enemies_waypoint_y=random.randint(0,height)
-                enemies_radians = math.atan2(enemies_waypoint_y-enemies_y, enemies_waypoint_x-enemies_x)
-                mydegrees = math.degrees(enemies_radians)
+            if abs(enemys_x-enemys_waypoint_x)<50 and abs(enemys_y-enemys_waypoint_y)<50:
+                enemys_waypoint_x= random.randint(0,width)
+                enemys_waypoint_y=random.randint(0,height)
+                enemys_radians = math.atan2(enemys_waypoint_y-enemys_y, enemys_waypoint_x-enemys_x)
+                mydegrees = math.degrees(enemys_radians)
                 print(mydegrees)
-                velocity_enemys_x = math.cos(enemies_radians) * enemies_speed_x
-                velocity_enemys_y = math.sin(enemies_radians) * enemies_speed_y
-                print(enemies_waypoint_x)
-                print(enemies_waypoint_y)
+                velocity_enemys_x = math.cos(enemys_radians) * enemys_speed_x
+                velocity_enemys_y = math.sin(enemys_radians) * enemys_speed_y
+                print(enemys_waypoint_x)
+                print(enemys_waypoint_y)
 
             if collision:
                 print("touchdown")
             if timev1>timev2+timev1:
-                screen.blit(enemies, (enemies_x,enemies_y))'''
-        for (index_enemys,enemy)  in enumerate(enemys): #Faire une indentation pour un nnouveau mode de jeu encore plus fun
-            if is_collide_between_rect(player_x,player_y,player_width,player_height,enemy_x,enemy_y,enemies_width,enemies_height) :
+                screen.blit(enemys, (enemys_x,enemys_y))'''
+            for (index_enemys,enemy)  in enumerate(enemys): #Faire une indentation pour un nnouveau mode de jeu encore plus fun
+             if is_collide_between_rect(player_x,player_y,player_width,player_height,enemy_x,enemy_y,enemys_width,enemys_height) :
            
                 gamez = False
                 
@@ -316,10 +265,10 @@ def game():
                     
             #pour vérifier que l'évènement est la fermeture de fenêtre
             if event.type == pygame.QUIT:
-                running = False
+                
                 pygame.quit()
                 print("fermeture du jeu")
 
 while(True):
     main_menu()
-    game()
+    game()  
