@@ -92,9 +92,19 @@ def game():
     red=(255, 0, 0)
     enemies = pygame.image.load("assets/Globbux.PNG")
     enemies = pygame.transform.scale(enemies,(50,50))
-    
+    boss = pygame.image.load("assets/Ship6.PNG")
+    boss = pygame.transform.scale(boss,(500,300))
+    boss_x=600
+    boss_y=360
+    boss_movement_speed_y=3
+    boss_movement_speed_x=3
+    boss_waypoint_x = 600
+    boss_waypoint_y = random.randint(0, 1080)
+    boss_width = 500
+    boss_height = 200
+    boss = pygame.transform.rotate(boss, 180)
     score=0
-    
+    hp_boss = 100
     player_x=30
     player_y=30
     player_width=35
@@ -104,10 +114,21 @@ def game():
     projectiles_speed=8
     projectiles_height=10
     projectiles_width=10
-    enemys_height=50
+    enemys_height=50    
     enemys_width=50
     enemys_speed_x = 3
     enemys_speed_y = 4
+    lazer=pygame.image.load("assets/Laser.PNG")
+    lazer = pygame.transform.scale(lazer,(1080-boss_width,2000))
+    lazer = pygame.transform.rotate(lazer, 270)
+    lazer_x=0
+    lazer_y=720-boss_y
+    lazer_width=1080-boss_width
+    lazer_height=boss_height
+    lazer_distant=0
+    black=(0, 0, 0)
+    
+
     
    
    
@@ -127,9 +148,12 @@ def game():
         screen.blit(background, (0,0))
         #D'abord mettre l'axe x puis y puis la largeur de l'objet et puis hauteur   
         screen.blit(Robolox, (player_x,player_y))
+        screen.blit(boss, (boss_x,boss_y))
+        screen.blit(lazer, (lazer_x,lazer_y))
+        
 
 
-        if(pygame.time.get_ticks() > timev1 + 1000):
+        if(pygame.time.get_ticks() > timev1 + 100):
             timev1 = pygame.time.get_ticks()
             if(random.randint(0, 100) >= 0):
 
@@ -158,20 +182,38 @@ def game():
                     #enemys[index_enemy][1] = 19999999
                     del enemys[index_enemy]
                     score=score+50
-                    
 
+            collision_boss=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,boss_x,boss_y,boss_width,boss_height)
+            if collision_boss:
+                hp_boss=hp_boss-1
+                print(hp_boss)
+            
+                del [boss]
             if projectile_x>width:
                 del projectiles[index_projectile] 
 
 
 
-#         if abs(enemys_x-enemys_waypoint_x)<50 and abs(enemys_y-enemys_waypoint_y)<50:
-#            enemys_waypoint_x= random.randint(0,width)
-#            enemys_waypoint_y=random.randint(0,height)
-#            enemys_radians = math.atan2(enemys_waypoint_y-enemys_y, enemys_waypoint_x-enemys_x)
-#            mydegrees = math.degrees(enemys_radians)
-#            velocity_enemys_x = math.cos(enemys_radians) * enemys_speed_x
-#            velocity_enemys_y = math.sin(enemys_radians) * enemys_speed_y
+        if abs(boss_x-boss_waypoint_x)<50 and abs(boss_y-boss_waypoint_y)<50:
+               
+                boss_waypoint_y=random.randint(0-enemys_height,1080+enemys_height)
+                 
+        
+
+        
+        
+
+        boss_radians = math.atan2(boss_waypoint_y-boss_y, boss_waypoint_x-boss_x)
+        
+        velocity_boss_x = math.cos(boss_radians) * boss_movement_speed_x
+        velocity_boss_y = math.sin(boss_radians) * boss_movement_speed_y
+        boss_x = boss_x+velocity_boss_x
+        boss_y = boss_y+velocity_boss_y
+        screen.blit(boss, (boss_x,boss_y))
+
+
+
+
 
 
 
@@ -268,6 +310,19 @@ def game():
                 
                 pygame.quit()
                 print("fermeture du jeu")
+
+
+
+#         if abs(enemys_x-enemys_waypoint_x)<50 and abs(enemys_y-enemys_waypoint_y)<50:
+#            enemys_waypoint_x= random.randint(0,width)
+#            enemys_waypoint_y=random.randint(0,height)
+#            enemys_radians = math.atan2(enemys_waypoint_y-enemys_y, enemys_waypoint_x-enemys_x)
+#            mydegrees = math.degrees(enemys_radians)
+#            velocity_enemys_x = math.cos(enemys_radians) * enemys_speed_x
+#            velocity_enemys_y = math.sin(enemys_radians) * enemys_speed_y
+
+
+
 
 while(True):
     main_menu()
