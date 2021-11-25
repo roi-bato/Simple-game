@@ -127,8 +127,10 @@ def game():
     lazer_height=boss_height
     lazer_distant=0
     black=(0, 0, 0)
-    
-
+    boss_status=True
+    player_hp=100
+    player_alive=True
+    invincible_time=pygame.time.get_ticks()
     
    
    
@@ -147,8 +149,10 @@ def game():
         #appliquer l'arrière plan du jeu
         screen.blit(background, (0,0))
         #D'abord mettre l'axe x puis y puis la largeur de l'objet et puis hauteur   
-        screen.blit(Robolox, (player_x,player_y))
-        screen.blit(boss, (boss_x,boss_y))
+        if player_alive:
+            screen.blit(Robolox, (player_x,player_y))
+        if boss_status:
+            screen.blit(boss, (boss_x,boss_y))
         screen.blit(lazer, (lazer_x,lazer_y))
         
 
@@ -182,13 +186,14 @@ def game():
                     #enemys[index_enemy][1] = 19999999
                     del enemys[index_enemy]
                     score=score+50
-
-            collision_boss=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,boss_x,boss_y,boss_width,boss_height)
-            if collision_boss:
-                hp_boss=hp_boss-1
-                print(hp_boss)
-            
-                del [boss]
+            if boss_status:
+                collision_boss=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,boss_x,boss_y,boss_width,boss_height)
+                if collision_boss:
+                    hp_boss=hp_boss-1
+                    print(hp_boss)
+                if hp_boss<0:
+                    del boss
+                    boss_status=False
             if projectile_x>width:
                 del projectiles[index_projectile] 
 
@@ -209,8 +214,7 @@ def game():
         velocity_boss_y = math.sin(boss_radians) * boss_movement_speed_y
         boss_x = boss_x+velocity_boss_x
         boss_y = boss_y+velocity_boss_y
-        screen.blit(boss, (boss_x,boss_y))
-
+        
 
 
 
@@ -256,8 +260,11 @@ def game():
             if timev1>timev2+timev1:
                 screen.blit(enemys, (enemys_x,enemys_y))'''
             for (index_enemys,enemy)  in enumerate(enemys): #Faire une indentation pour un nnouveau mode de jeu encore plus fun
-             if is_collide_between_rect(player_x,player_y,player_width,player_height,enemy_x,enemy_y,enemys_width,enemys_height) :
-           
+                if is_collide_between_rect(player_x,player_y,player_width,player_height,enemy_x,enemy_y,enemys_width,enemys_height) and (pygame.time.get_ticks() > invincible_time + 100) :
+                    player_hp=player_hp-1
+                    print(player_hp)
+                    invincible_time=pygame.time.get_ticks()
+            if player_hp<0:
                 gamez = False
                 
         #metre à jour l'écran
@@ -302,6 +309,9 @@ def game():
                 velocity_y = math.sin(myradians) * projectiles_speed
 
                 projectiles.append([player_x, player_y,velocity_x,velocity_y])
+                projectiles.append([player_x, player_y,velocity_x+5,velocity_y+5])
+                projectiles.append([player_x, player_y,velocity_x+5,velocity_y-5])
+
 
                 
                     
