@@ -86,9 +86,11 @@ def game():
     width=1080
     height=720
     screen = pygame.display.set_mode((width,height))
-    Robolox = pygame.image.load("assets/Robotor.PNG")
+    Robolox = pygame.image.load("assets/player.PNG")
     Robolox = pygame.transform.scale(Robolox,(35,35))
+    Robolox = pygame.transform.rotate(Robolox, 90)
     background = pygame.image.load("assets/Capture.PNG")
+    
     red=(255, 0, 0)
     enemies = pygame.image.load("assets/Globbux.PNG")
     enemies = pygame.transform.scale(enemies,(50,50))
@@ -116,8 +118,8 @@ def game():
     projectiles_width=10
     enemys_height=50    
     enemys_width=50
-    enemys_speed_x = 3
-    enemys_speed_y = 4
+    enemys_speed_x = 10
+    enemys_speed_y = 10
     lazer=pygame.image.load("assets/Laser.PNG")
     lazer = pygame.transform.scale(lazer,(boss_width,width-boss_width))
     lazer = pygame.transform.rotate(lazer, 270)
@@ -188,8 +190,8 @@ def game():
         if(pygame.time.get_ticks() > timev1 + 100):
             timev1 = pygame.time.get_ticks()
             if(random.randint(0, 100) >= 0):
-
-                enemys.append([random.randint(0,width),random.randint(0,height),random.randint(0,width),random.randint(0,height)])
+                enemys.append([random.randint(1100,2200),random.randint(0,height),random.randint(player_x-100,player_x+100),random.randint(player_y-100,player_y+100)])
+                #enemys.append([random.randint(0,width),random.randint(0,height),random.randint(0,width),random.randint(0,height)])
 
 
         
@@ -263,53 +265,43 @@ def game():
         """for (index_support_lazer, lazzer) in enumerate(supports):
             (support_x,support_y,support_width,support_height) = lazzer
             screen.blit(support, (support_x,support_y))"""
-        if support_unit==1 :
-            support_distance_y=-40
-            support_distance_x=-40
-        if support_unit==2:
-            support_distance_y=40
-
-
-        if support_unit==3 :
-            support_distance_x=-80
-            support_distance_y=-80
-        if support_unit==4:
-            support_distance_y=80
+   
 
         for (index_supports, supporte) in enumerate(supports):
             
 
-            (support_x,support_y,support_width,support_height) = supporte
-            screen.blit(support, ((player_x+support_distance_x),(player_y+support_distance_y)))
+            
+            screen.blit(support, ((supporte[0]),(supporte[1])))
             
 
             if keys[pygame.K_LEFT]:
-                support_x=support_x-player_speed
+                supporte[0]=supporte[0]-player_speed
             if keys[pygame.K_RIGHT]:
-                support_x=support_x+player_speed
+                supporte[0]=supporte[0]+player_speed
             if keys[pygame.K_UP]:
-                support_y=support_y-player_speed
+                supporte[1]=supporte[1]-player_speed
             if keys[pygame.K_DOWN]:
-                support_y=support_y+player_speed
+                supporte[1]=supporte[1]+player_speed
+            if supporte[0]<-30:
+                supporte[0]=-30
+            if supporte[0]>width-support_width:
+                supporte[0]=width-support_width
+            if supporte[1]<-30:
+                supporte[1]=-30
+            if supporte[1]>height-support_height:
+                supporte[1]=height-support_height
         support_distance=-40
         for (index_support_lazer,supporte_lazer) in enumerate(supports_lazers):
-            if support_unit<2:
-                (lazer_support_x,lazer_support_y,lazer_support_width,lazer_support_height) = supporte_lazer
-                screen.blit(support_lazer, ((player_x-415-support_distance*support_unit),(player_y-support_distance*support_unit)))
-                
-            elif support_unit>2:
-                (lazer_support_x,lazer_support_y,lazer_support_width,lazer_support_height) = supporte_lazer
-                screen.blit(support_lazer, ((player_x+415+support_distance),(player_y-40+support_distance)))
-                support_distance_y=(support_distance+40)
-
+            screen.blit(support_lazer, ((supporte_lazer[0]),(supporte_lazer[1])))
+           
             if keys[pygame.K_LEFT]:
-                support_x=support_x-player_speed
+                supporte_lazer[0]=supporte_lazer[0]-player_speed
             if keys[pygame.K_RIGHT]:
-                support_x=support_x+player_speed
+                supporte_lazer[0]=supporte_lazer[0]+player_speed
             if keys[pygame.K_UP]:
-                support_y=support_y-player_speed
+                supporte_lazer[1]=supporte_lazer[1]-player_speed
             if keys[pygame.K_DOWN]:
-                support_y=support_y+player_speed
+                supporte_lazer[1]=supporte_lazer[1]+player_speed
 
         for (index_items, iteme) in enumerate(items):
             (item_x,item_y,item_width,item_height) = iteme
@@ -327,13 +319,17 @@ def game():
             enemy[1] = enemy[1]+velocity_enemy_y
             screen.blit(enemies, (enemy_x,enemy_y))
 
-       
-     
-
             if abs(enemy_x-enemy_waypoint_x)<50 and abs(enemy_y-enemy_waypoint_y)<50:
-                enemy_waypoint_x= random.randint(0,width)
-                enemy_waypoint_y=random.randint(0,height)
+                enemy_waypoint_x= random.randint(player_x-100,player_x+100)
+                enemy_waypoint_y=random.randint(player_y-100,player_y+100)
                 enemys[index_enemys] =  [enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y]
+
+ 
+
+            #if abs(enemy_x-enemy_waypoint_x)<50 and abs(enemy_y-enemy_waypoint_y)<50: #si l'on veut du random screen
+               # enemy_waypoint_x= random.randint(0,width)
+               # enemy_waypoint_y=random.randint(0,height)
+               # enemys[index_enemys] =  [enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y]
 
  
             '''collision=is_collide_between_rect(projectile_x,projectile_y, projectiles_width,projectiles_height,enemys_x,enemys_y,enemys_width,enemys_height)
@@ -360,16 +356,29 @@ def game():
                     invincible_time=pygame.time.get_ticks()
             for (index_items,iteme) in enumerate(items):
                 if is_collide_between_rect(player_x,player_y,player_width,player_height,iteme[0],iteme[1],iteme[2],iteme[3]) :
-                    
+                    support_unit=support_unit+1
                     numbre_projetile=numbre_projetile+1
+                    print(support_unit)
                     del items[index_items] 
-                    if support_unit<4:
-                        print("+9")
-                        supports.append([support_x,support_y,support_width,support_height])
-                        supports_lazers.append([lazer_support_x,lazer_support_y,lazer_width,lazer_height])
-                
+                    if support_unit<5:
+                        if support_unit==1 :
+                            support_distance_y=-40
+                            support_distance_x=-40
+                        if support_unit==2:
+                            support_distance_y=40
+
+
+                        if support_unit==3 :
+                            support_distance_x=-80
+                            support_distance_y=-80
+                        if support_unit==4:
+                            support_distance_y=80
+                            print("+9")
+                        supports.append([(player_x+support_distance_x),(player_y+support_distance_y)])
+                        supports_lazers.append([(player_x+support_distance_x-380),(player_y+support_distance_y),lazer_width,lazer_height])
                     
-                        support_unit=support_unit+1
+                        
+                        
                         support_active=True
 
 
@@ -441,7 +450,7 @@ def game():
                     
                     velocity_x = (math.cos((myradians+distance)))  * projectiles_speed
                     velocity_y = (math.sin((myradians+distance))) * projectiles_speed
-                    distance=distance+(math.pi/12)
+                    distance=(distance+(math.pi/12))/(math.pi/6)
                     projectiles.append([player_x, player_y,(velocity_x),(velocity_y)])
                    
                 
