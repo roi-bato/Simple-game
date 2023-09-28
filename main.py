@@ -86,16 +86,16 @@ def game():
     width=2000
     height=720
     screen = pygame.display.set_mode((width,height))
-    Robolox = pygame.image.load("assets/player.PNG")
+    Robolox = pygame.image.load("player.PNG")
     Robolox = pygame.transform.scale(Robolox,(35,35))
     Robolox = pygame.transform.rotate(Robolox, 90)
     background = pygame.image.load("assets/Capture.PNG")
-    hp_barre=pygame.image.load("assets/hp_barre.png")
+    hp_barre=pygame.image.load("hp_barre.png")
     
     red=(255, 0, 0)
     enemies = pygame.image.load("assets/Globbux.PNG")
     enemies = pygame.transform.scale(enemies,(50,50))
-    boss = pygame.image.load("assets/Ship6.PNG")
+    boss = pygame.image.load("Ship6.PNG")
     boss = pygame.transform.scale(boss,(500,300))
     boss_x=600
     boss_y=360
@@ -121,7 +121,7 @@ def game():
     enemys_width=50
     enemys_speed_x = 10
     enemys_speed_y = 10
-    lazer=pygame.image.load("assets/lazer.png")
+    lazer=pygame.image.load("lazer.png")
     lazer = pygame.transform.scale(lazer,(boss_width,width-boss_width))
     lazer = pygame.transform.rotate(lazer, 270)
     lazer_x=0
@@ -134,7 +134,7 @@ def game():
     player_hp=100
     player_alive=True
     invincible_time=pygame.time.get_ticks()
-    item_1=pygame.image.load("assets/item1.PNG")
+    item_1=pygame.image.load("item1.PNG")
     item_1=pygame.transform.scale(item_1,(20,20))
     item_height=20
     item_width=20
@@ -143,13 +143,13 @@ def game():
     distance=0
     item_drop=0
     supports_lazers=[]
-    support=pygame.image.load("assets/support_ship.PNG")
+    support=pygame.image.load("support_ship.PNG")
     support=pygame.transform.scale(support,(40,40))
     support_x=player_x-40
     support_y=player_y-40
     support_width=40
     support_height=5
-    support_lazer=pygame.image.load("assets/lazer.png")
+    support_lazer=pygame.image.load("lazer.png")
     support_lazer=lazer = pygame.transform.scale(lazer,(2000,support_height))
     #support_lazer=pygame.draw.line(background,black,(100,100),
     lazer_support_x=support_x-380
