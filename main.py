@@ -89,6 +89,8 @@ def game():
     Robolox = pygame.image.load("assets/Robotor.PNG")
     Robolox = pygame.transform.scale(Robolox,(35,35))
     background = pygame.image.load("assets/Capture.PNG")
+    hp_barre=pygame.image.load("assets/hp_barre.png")
+
     red=(255, 0, 0)
     enemies = pygame.image.load("assets/Globbux.PNG")
     enemies = pygame.transform.scale(enemies,(50,50))
@@ -108,7 +110,10 @@ def game():
     enemys_width=50
     enemys_speed_x = 3
     enemys_speed_y = 4
-    
+    player_hp = 100
+    player_alive = True
+    numbre_projetile = 1
+    invincible_time = pygame.time.get_ticks()
    
    
     
@@ -126,14 +131,23 @@ def game():
         #appliquer l'arrière plan du jeu
         screen.blit(background, (0,0))
         #D'abord mettre l'axe x puis y puis la largeur de l'objet et puis hauteur   
-        screen.blit(Robolox, (player_x,player_y))
+        if player_alive:
+            screen.blit(Robolox, (player_x,player_y))
+            screen.blit(hp_barre, (0,0))
+            hp_barre=pygame.transform.scale(hp_barre,(10*player_hp,10))
+
+
+
+
+
+
 
 
         if(pygame.time.get_ticks() > timev1 + 1000):
             timev1 = pygame.time.get_ticks()
             if(random.randint(0, 100) >= 0):
-
-                enemys.append([random.randint(0,width),random.randint(0,height),random.randint(0,width),random.randint(0,height)])
+                enemys.append([random.randint(1100,2200),random.randint(0,height),random.randint(player_x-100,player_x+100),random.randint(player_y-100,player_y+100)])
+                #enemys.append([random.randint(0,width),random.randint(0,height),random.randint(0,width),random.randint(0,height)])
 
 
         
@@ -177,7 +191,8 @@ def game():
 
 
         for (index_enemys, enemy) in enumerate(enemys):
-            (enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y) = enemy
+            (enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y,) = enemy
+
 
             enemy_radians = math.atan2(enemy_waypoint_y-enemy_y, enemy_waypoint_x-enemy_x)
             mydegrees = math.degrees(enemy_radians)
@@ -190,9 +205,9 @@ def game():
        
      
 
-            if abs(enemy_x-enemy_waypoint_x)<50 and abs(enemy_y-enemy_waypoint_y)<50:
-                enemy_waypoint_x= random.randint(0,width)
-                enemy_waypoint_y=random.randint(0,height)
+            if abs(enemy_x-enemy_waypoint_x)<10 and abs(enemy_y-enemy_waypoint_y)<10:
+                enemy_waypoint_x= player_x
+                enemy_waypoint_y=player_y
                 enemys[index_enemys] =  [enemy_x, enemy_y, enemy_waypoint_x, enemy_waypoint_y]
 
  
@@ -214,13 +229,14 @@ def game():
             if timev1>timev2+timev1:
                 screen.blit(enemys, (enemys_x,enemys_y))'''
             for (index_enemys,enemy)  in enumerate(enemys): #Faire une indentation pour un nnouveau mode de jeu encore plus fun
-             if is_collide_between_rect(player_x,player_y,player_width,player_height,enemy_x,enemy_y,enemys_width,enemys_height) :
-           
-                gamez = False
+                if is_collide_between_rect(player_x, player_y, player_width, player_height, enemy_x, enemy_y,enemys_width, enemys_height) and (pygame.time.get_ticks() > invincible_time + 100):
+                    player_hp = player_hp - 1
+                    invincible_time = pygame.time.get_ticks()
                 
         #metre à jour l'écran
         pygame.display.flip()
-
+        if player_hp<0:
+            gamez = False
 
         keys=pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -255,7 +271,16 @@ def game():
                 pos_y = pos[1]
                 myradians = math.atan2(pos_y-player_y, pos_x-player_x)
                 mydegrees = math.degrees(myradians)
-                
+                distance=-((numbre_projetile/2)*(math.pi/20))
+
+                for k in range (0,numbre_projetile):
+
+                    velocity_x = (math.cos((myradians+distance)))  * projectiles_speed
+                    velocity_y = (math.sin((myradians+distance))) * projectiles_speed
+                    distance=(distance+(math.pi/20))
+                    projectiles.append([player_x, player_y,(velocity_x),(velocity_y)])
+
+
                 velocity_x = math.cos(myradians) * projectiles_speed
                 velocity_y = math.sin(myradians) * projectiles_speed
 
